@@ -17,7 +17,7 @@ const NavBar = () => {
         {links.map((link) => (
           <Link
             key={link.href}
-            className="text-zinc-300 hover:text-zinc-500 transition-colors"
+            className="text-zinc-200 hover:text-zinc-500 transition-colors"
             href={link.href}>
             {link.label}
           </Link>
