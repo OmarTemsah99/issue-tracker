@@ -48,6 +48,11 @@ body {
   background: var(--simplemde-toolbar-active-bg, #444) !important;
   color: var(--simplemde-toolbar-active-fg, #fff) !important;
 }
+.editor-toolbar a:hover,
+.editor-toolbar button:hover {
+  background: #35363a !important;
+  color: #f5f6fa !important;
+}
 .editor-toolbar i.separator {
   border-left: 1px solid #444 !important;
 }
