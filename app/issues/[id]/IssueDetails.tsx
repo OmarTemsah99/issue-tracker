@@ -12,7 +12,7 @@ const IssueDetails = ({ issue }: { issue: Issue }) => {
         <Text>{issue.createdAt.toDateString()}</Text>
       </Flex>
       <Card
-        className="prose prose-strong:text-zinc-200 prose-h1:text-zinc-200 text-zinc-200"
+        className="prose max-w-full prose-strong:text-zinc-200 prose-h1:text-zinc-200 text-zinc-200"
         mt="4">
         <ReactMarkDown>{issue.description}</ReactMarkDown>
       </Card>
