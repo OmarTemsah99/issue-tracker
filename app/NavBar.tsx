@@ -16,14 +16,6 @@ import {
 } from "@radix-ui/themes";
 
 const NavBar = () => {
-  const currentPath = usePathname();
-  const { status, data: session } = useSession();
-
-  const links = [
-    { label: "Dashboard", href: "/" },
-    { label: "Issues", href: "/issues" },
-  ];
-
   return (
     <nav className="border-b mb-5 px-5 py-3 text-zinc-600">
       <Container>
@@ -32,59 +24,79 @@ const NavBar = () => {
             <Link href="/">
               <AiFillBug className="text-zinc-200" />
             </Link>
-            <ul className="flex space-x-6">
-              {links.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    className={classnames({
-                      "text-zinc-600": link.href === currentPath,
-                      "text-zinc-200": link.href !== currentPath,
-                      "hover:text-zinc-500 transition-colors": true,
-                    })}
-                    href={link.href}>
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <NavLinks />
           </Flex>
-          <Box>
-            {status === "authenticated" && (
-              <DropdownMenu.Root>
-                <DropdownMenu.Trigger>
-                  <Avatar
-                    src={session.user!.image!}
-                    fallback="?"
-                    size="2"
-                    radius="full"
-                    className="cursor-pointer"
-                  />
-                </DropdownMenu.Trigger>
-                <DropdownMenu.Content>
-                  <DropdownMenu.Label>
-                    <Text size="2" className="text-zinc-200">
-                      {session.user!.email}
-                    </Text>
-                  </DropdownMenu.Label>
-                  <DropdownMenu.Item>
-                    <Link className="text-zinc-200" href="/api/auth/signout">
-                      Log out
-                    </Link>
-                  </DropdownMenu.Item>
-                </DropdownMenu.Content>
-              </DropdownMenu.Root>
-            )}
-            {status === "unauthenticated" && (
-              <Link
-                className="text-zinc-200 hover:text-zinc-500 transition-colors"
-                href="/api/auth/signin">
-                Login
-              </Link>
-            )}
-          </Box>
+          <AuthStatus />
         </Flex>
       </Container>
     </nav>
+  );
+};
+
+const NavLinks = () => {
+  const currentPath = usePathname();
+
+  const links = [
+    { label: "Dashboard", href: "/" },
+    { label: "Issues", href: "/issues" },
+  ];
+
+  return (
+    <ul className="flex space-x-6">
+      {links.map((link) => (
+        <li key={link.href}>
+          <Link
+            className={classnames({
+              "nav-link": true,
+              "!text-zinc-600": link.href === currentPath,
+            })}
+            href={link.href}>
+            {link.label}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+const AuthStatus = () => {
+  const { status, data: session } = useSession();
+
+  if (status === "loading") return null;
+
+  if (status === "unauthenticated")
+    return (
+      <Link className="nav-link" href="/api/auth/signin">
+        Login
+      </Link>
+    );
+
+  return (
+    <Box>
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger>
+          <Avatar
+            src={session!.user!.image!}
+            fallback="?"
+            size="2"
+            radius="full"
+            className="cursor-pointer"
+          />
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content>
+          <DropdownMenu.Label>
+            <Text size="2" className="text-zinc-200">
+              {session!.user!.email}
+            </Text>
+          </DropdownMenu.Label>
+          <DropdownMenu.Item>
+            <Link className="text-zinc-200" href="/api/auth/signout">
+              Log out
+            </Link>
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
+    </Box>
   );
 };
 

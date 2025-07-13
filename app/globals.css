@@ -13,6 +13,12 @@ body {
   transition: background 0.2s, color 0.2s;
 }
 
+@layer utilities {
+  .nav-link {
+    @apply text-zinc-200 hover:text-zinc-500 transition-colors;
+  }
+}
+
 /* Dark theme overrides for SimpleMDE markdown editor using Radix UI variables */
 :root,
 [data-theme],
