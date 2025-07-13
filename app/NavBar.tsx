@@ -6,7 +6,7 @@ import React from "react";
 import { AiFillBug } from "react-icons/ai";
 import classnames from "classnames";
 import { useSession } from "next-auth/react";
-import { Box } from "@radix-ui/themes";
+import { Box, Container, Flex } from "@radix-ui/themes";
 
 const NavBar = () => {
   const currentPath = usePathname();
@@ -18,41 +18,47 @@ const NavBar = () => {
   ];
 
   return (
-    <nav className="flex space-x-6 border-b mb-5 px-5 h-14 items-center text-zinc-600">
-      <Link href="/">
-        <AiFillBug className="text-zinc-200" />
-      </Link>
-      <ul className="flex space-x-6">
-        {links.map((link) => (
-          <li key={link.href}>
-            <Link
-              className={classnames({
-                "text-zinc-600": link.href === currentPath,
-                "text-zinc-200": link.href !== currentPath,
-                "hover:text-zinc-500 transition-colors": true,
-              })}
-              href={link.href}>
-              {link.label}
+    <nav className="border-b mb-5 px-5 py-3 text-zinc-600">
+      <Container>
+        <Flex justify="between">
+          <Flex align="center" gap="3">
+            <Link href="/">
+              <AiFillBug className="text-zinc-200" />
             </Link>
-          </li>
-        ))}
-      </ul>
-      <Box>
-        {status === "authenticated" && (
-          <Link
-            className="text-zinc-200 hover:text-zinc-500 transition-colors"
-            href="/api/auth/signout">
-            Log out
-          </Link>
-        )}
-        {status === "unauthenticated" && (
-          <Link
-            className="text-zinc-200 hover:text-zinc-500 transition-colors"
-            href="/api/auth/signin">
-            Login
-          </Link>
-        )}
-      </Box>
+            <ul className="flex space-x-6">
+              {links.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    className={classnames({
+                      "text-zinc-600": link.href === currentPath,
+                      "text-zinc-200": link.href !== currentPath,
+                      "hover:text-zinc-500 transition-colors": true,
+                    })}
+                    href={link.href}>
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </Flex>
+          <Box>
+            {status === "authenticated" && (
+              <Link
+                className="text-zinc-200 hover:text-zinc-500 transition-colors"
+                href="/api/auth/signout">
+                Log out
+              </Link>
+            )}
+            {status === "unauthenticated" && (
+              <Link
+                className="text-zinc-200 hover:text-zinc-500 transition-colors"
+                href="/api/auth/signin">
+                Login
+              </Link>
+            )}
+          </Box>
+        </Flex>
+      </Container>
     </nav>
   );
 };
