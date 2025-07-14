@@ -4,20 +4,11 @@ import { Issue, User } from "@/app/generated/prisma";
 import { Select } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import toast, { Toaster } from "react-hot-toast";
 import { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 const AssigneeSelect = ({ issue }: { issue: Issue }) => {
-  const {
-    data: users,
-    error,
-    isLoading,
-  } = useQuery<User[]>({
-    queryKey: ["users"],
-    queryFn: () => axios.get("/api/users").then((res) => res.data),
-    staleTime: 60 * 1000,
-    retry: 3,
-  });
+  const { data: users, error, isLoading } = useUsers();
 
   const [selectedUserId, setSelectedUserId] = useState(
     issue.assignedToUserId || "unassigned"
@@ -32,12 +23,12 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
 
   if (error) return null;
 
-  const handleChange = async (userId: string) => {
+  const assignIssue = async (userId: string) => {
     const previousUserId = selectedUserId;
     setSelectedUserId(userId);
 
     try {
-      await axios.patch("/xapi/issues/" + issue.id, {
+      await axios.patch("/api/issues/" + issue.id, {
         assignedToUserId: userId === "unassigned" ? null : userId,
       });
     } catch {
@@ -48,7 +39,7 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
 
   return (
     <>
-      <Select.Root value={selectedUserId} onValueChange={handleChange}>
+      <Select.Root value={selectedUserId} onValueChange={assignIssue}>
         <Select.Trigger placeholder="Assign..." />
         <Select.Content>
           <Select.Group>
@@ -86,5 +77,13 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
     </>
   );
 };
+
+const useUsers = () =>
+  useQuery<User[]>({
+    queryKey: ["users"],
+    queryFn: () => axios.get("/api/users").then((res) => res.data),
+    staleTime: 60 * 1000,
+    retry: 3,
+  });
 
 export default AssigneeSelect;
