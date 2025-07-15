@@ -4,6 +4,7 @@ import { prisma } from "@/prisma/client";
 import { Table } from "@radix-ui/themes";
 import IssueActions from "./IssueActions";
 import { Issue, Status } from "../generated/prisma";
+import { ArrowUpIcon } from "@radix-ui/react-icons";
 
 interface Props {
   searchParams: Promise<{ status: Status; orderBy: keyof Issue }>;
@@ -50,7 +51,12 @@ const IssuesPage = async ({ searchParams }: Props) => {
                   href={{
                     query: { ...resolvedSearchParams, orderBy: colum.value },
                   }}>
-                  {colum.label}
+                  <span className="inline-flex items-center gap-1">
+                    {colum.label}
+                    {orderBy === colum.value && (
+                      <ArrowUpIcon className="inline" />
+                    )}
+                  </span>
                 </NextLink>
               </Table.ColumnHeaderCell>
             ))}
